@@ -19,6 +19,7 @@ import json
 import logging
 from typing import Any, Optional
 from copy import deepcopy
+from awesomeversion import AwesomeVersion
 
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
@@ -26,6 +27,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.core import HomeAssistant
+from homeassistant.const import __version__ as HAVERSION
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import selector
@@ -218,7 +220,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     """Handles options flow for the component."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
+        if AwesomeVersion(HAVERSION) < "2024.11.99":
+            self.config_entry = config_entry
         self.selected_vacuum = None
 
     async def async_step_init(self, user_input=None):
